@@ -319,3 +319,100 @@ GROUP BY species;
  pokemon | 3.0000000000000000
 (1 fila)
 */
+
+/* *********************************************************************************************************************** */
+
+/* What animals belong to Melody Pond? */
+SELECT name FROM animals 
+JOIN owners ON animals.owner_id=owners.id 
+WHERE owners.full_name = 'Melody Pond';
+/*
+    name    
+------------
+ Squirtle
+ Charmander
+ Blossom
+(3 filas)
+*/
+
+*/ List of all animals that are pokemon (their type is Pokemon). */
+SELECT * FROM animals 
+JOIN species ON animals.species_id=species.id 
+WHERE species.name = 'Pokemon';
+/*
+ id |    name    | date_of_birth | escape_attempts | neutered | weight_kg | species_id | owner_id | id |  name   
+----+------------+---------------+-----------------+----------+-----------+------------+----------+----+---------
+ 11 | Squirtle   | 1993-04-02    |               3 | f        |     12.13 |          1 |        4 |  1 | Pokemon
+  9 | Charmander | 2020-02-08    |               0 | f        |        11 |          1 |        4 |  1 | Pokemon
+ 14 | Blossom    | 1998-10-13    |               3 | t        |        17 |          1 |        4 |  1 | Pokemon
+ 16 | Ditto      | 2022-05-14    |               4 | t        |        22 |          1 |          |  1 | Pokemon
+  7 | Pikachu    | 2021-01-07    |               1 | f        |     15.04 |          1 |        2 |  1 | Pokemon
+(5 filas)
+*/
+
+/* List all owners and their animals, remember to include those that don't own any animal. */
+SELECT owners.full_name, animals.name FROM owners
+LEFT JOIN animals ON owners.id = animals.owner_id;
+/*
+    full_name    |    name    
+-----------------+------------
+ Sam Smith       | Agumon
+ Jennifer Orwell | Pikachu
+ Jennifer Orwell | Gabumon
+ Bob             | Devimon
+ Bob             | Plantmon
+ Melody Pond     | Blossom
+ Melody Pond     | Charmander
+ Melody Pond     | Squirtle
+ Dean Winchester | Boarmon
+ Dean Winchester | Angemon
+ Jodie Whittaker | 
+(11 filas)
+*/
+
+/*How many animals are there per species?*/
+SELECT species.name, COUNT(*) FROM species 
+JOIN animals ON species.id=animals.species_id 
+GROUP BY species.name;
+/*
+  name   | count 
+---------+-------
+ Pokemon |     5
+ Digimon |     6
+(2 filas)
+*/
+
+/* List all Digimon owned by Jennifer Orwell. */
+SELECT animals.name FROM animals 
+JOIN owners ON animals.owner_id=owners.id 
+JOIN species ON animals.species_id=species.id 
+WHERE owners.full_name='Jennifer Orwell' AND species.name = 'Digimon';
+/*
+  name   
+---------
+ Gabumon
+(1 fila)
+*/
+
+/* List all animals owned by Dean Winchester that haven't tried to escape.*/
+SELECT animals.name FROM animals 
+JOIN owners ON animals.owner_id=owners.id 
+WHERE owners.full_name='Dean Winchester' AND animals.escape_attempts=0;
+/*
+ name 
+------
+(0 filas)
+*/
+
+/* Who owns the most animals? */
+SELECT owners.full_name, COUNT(animals.name) FROM owners 
+LEFT JOIN animals ON owners.id = animals.owner_id 
+GROUP BY owners.full_name 
+ORDER BY count DESC 
+LIMIT 1;
+/*
+  full_name  | count 
+-------------+-------
+ Melody Pond |     3
+(1 fila)
+*/
