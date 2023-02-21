@@ -33,3 +33,6 @@ VALUES ('Boarmon', 'Jun 7, 2005', 20.4, 'TRUE', 7);
 
 INSERT INTO animals (name, date_of_birth, weight_kg, neutered, escape_attempts)
 VALUES ('Blossom', 'Oct 13, 1998', 17, 'TRUE', 3);
+
+INSERT INTO animals (name, date_of_birth, weight_kg, neutered, escape_attempts)
+VALUES ('Ditto', 'May 14, 2022', 22, 'TRUE', 4);
