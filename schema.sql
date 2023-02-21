@@ -10,3 +10,7 @@ neutered BOOL,
 weight_kg DECIMAL
 );
 
+/* ****************************************************************************************** */
+
+/* Add species column */
+ALTER TABLE animals ADD COLUMN species VARCHAR;
