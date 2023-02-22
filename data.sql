@@ -88,3 +88,82 @@ UPDATE animals SET owner_id=5 WHERE name IN ('Angemon', 'Boarmon');
   7 | Pikachu    | 2021-01-07    |               1 | f        |     15.04 |          1 |        2
 (11 filas)
 */
+
+/* ************************************************************************************************ */
+
+INSERT INTO vets(name, age, date_of_graduation)
+VALUES  ('William Tatcher', 45, 'Apr 23, 2000'),
+        ('Maisy Smith', 26, 'Jan 17, 2019'), 
+        ('Stephanie Mendez', 64, 'May 4, 1981'), 
+        ('Jack Harkness', 38, 'Jun 8, 2008');
+/*
+ id |       name       | age | date_of_graduation 
+----+------------------+-----+--------------------
+  1 | William Tatcher  |  45 | 2000-04-23
+  2 | Maisy Smith      |  26 | 2019-01-17
+  3 | Stephanie Mendez |  64 | 1981-05-04
+  4 | Jack Harkness    |  38 | 2008-06-08
+*/
+
+INSERT INTO specializations(vet_id, species_id) 
+VALUES
+        ((SELECT id FROM vets WHERE name='William Tatcher'),(SELECT id FROM species WHERE name = 'Pokemon')),
+        ((SELECT id FROM vets WHERE name='Stephanie Mendez'),(SELECT id FROM species WHERE name = 'Pokemon')), 
+        ((SELECT id FROM vets WHERE name='Stephanie Mendez'),(SELECT id FROM species WHERE name = 'Digimon')), 
+        ((SELECT id FROM vets WHERE name='Jack Harkness'),(SELECT id FROM species WHERE name = 'Digimon'));
+/*
+ species_id | vet_id 
+------------+--------
+          1 |      1
+          1 |      3
+          2 |      3
+          2 |      4
+*/
+
+INSERT INTO visits(animal_id, vet_id, visit_date) 
+VALUES
+        ((SELECT id FROM animals WHERE name ='Agumon'), (SELECT id FROM vets WHERE name = 'William Tatcher'), 'May 24, 2020'), 
+        ((SELECT id FROM animals WHERE name ='Agumon'), (SELECT id FROM vets WHERE name = 'Stephanie Mendez'), 'Jul 22, 2020'), 
+        ((SELECT id FROM animals WHERE name ='Gabumon'), (SELECT id FROM vets WHERE name = 'Jack Harkness'), 'Feb 2, 2021'), 
+        ((SELECT id FROM animals WHERE name ='Pikachu'), (SELECT id FROM vets WHERE name = 'Maisy Smith'), 'Jan 5, 2020'), 
+        ((SELECT id FROM animals WHERE name ='Pikachu'), (SELECT id FROM vets WHERE name = 'Maisy Smith'), 'Mar 8, 2020'), 
+        ((SELECT id FROM animals WHERE name ='Pikachu'), (SELECT id FROM vets WHERE name = 'Maisy Smith'), 'May 14, 2020'), 
+        ((SELECT id FROM animals WHERE name ='Devimon'), (SELECT id FROM vets WHERE name = 'Stephanie Mendez'), 'May 4, 2021'), 
+        ((SELECT id FROM animals WHERE name ='Charmander'), (SELECT id FROM vets WHERE name = 'Jack Harkness'), 'Feb 24, 2021'), 
+        ((SELECT id FROM animals WHERE name ='Plantmon'), (SELECT id FROM vets WHERE name = 'Maisy Smith'), 'Dec 21, 2019'), 
+        ((SELECT id FROM animals WHERE name ='Plantmon'), (SELECT id FROM vets WHERE name = 'William Tatcher'), 'Aug 10, 2020'), 
+        ((SELECT id FROM animals WHERE name ='Plantmon'), (SELECT id FROM vets WHERE name = 'Maisy Smith'), 'Apr 7, 2021'), 
+        ((SELECT id FROM animals WHERE name ='Squirtle'), (SELECT id FROM vets WHERE name = 'Stephanie Mendez'), 'Sep 29, 2019'), 
+        ((SELECT id FROM animals WHERE name ='Angemon'), (SELECT id FROM vets WHERE name = 'Jack Harkness'), 'Oct 3, 2020'), 
+        ((SELECT id FROM animals WHERE name ='Angemon'), (SELECT id FROM vets WHERE name = 'Jack Harkness'), 'Nov 4, 2020'), 
+        ((SELECT id FROM animals WHERE name ='Boarmon'), (SELECT id FROM vets WHERE name = 'Maisy Smith'), 'Jan 24, 2019'), 
+        ((SELECT id FROM animals WHERE name ='Boarmon'), (SELECT id FROM vets WHERE name = 'Maisy Smith'), 'May 15, 2019'), 
+        ((SELECT id FROM animals WHERE name ='Boarmon'), (SELECT id FROM vets WHERE name = 'Maisy Smith'), 'Feb 27, 2020'), 
+        ((SELECT id FROM animals WHERE name ='Boarmon'), (SELECT id FROM vets WHERE name = 'Maisy Smith'), 'Aug 3, 2020'), 
+        ((SELECT id FROM animals WHERE name ='Blossom'), (SELECT id FROM vets WHERE name = 'Stephanie Mendez'), 'May 24, 2020'), 
+        ((SELECT id FROM animals WHERE name ='Blossom'), (SELECT id FROM vets WHERE name = 'William Tatcher'), 'Jan 11, 2021');
+        /*
+         animal_id | vet_id | visit_date 
+-----------+--------+------------
+         1 |      1 | 2020-05-24
+         1 |      3 | 2020-07-22
+         6 |      4 | 2021-02-02
+         7 |      2 | 2020-01-05
+         7 |      2 | 2020-03-08
+         7 |      2 | 2020-05-14
+         8 |      3 | 2021-05-04
+         9 |      4 | 2021-02-24
+        10 |      2 | 2019-12-21
+        10 |      1 | 2020-08-10
+        10 |      2 | 2021-04-07
+        11 |      3 | 2019-09-29
+        12 |      4 | 2020-10-03
+        12 |      4 | 2020-11-04
+        13 |      2 | 2019-01-24
+        13 |      2 | 2019-05-15
+        13 |      2 | 2020-02-27
+        13 |      2 | 2020-08-03
+        14 |      3 | 2020-05-24
+        14 |      1 | 2021-01-11
+*/
+

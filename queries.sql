@@ -416,3 +416,133 @@ LIMIT 1;
  Melody Pond |     3
 (1 fila)
 */
+
+/* *********************************************************************************************************************** */
+
+/* Who was the last animal seen by William Tatcher? */
+SELECT visits.visit_date, animals.name 
+FROM visits 
+JOIN animals ON visits.animal_id=animals.id 
+JOIN vets ON visits.vet_id=vets.id 
+WHERE vets.name='William Tatcher' 
+ORDER BY visit_date ASC 
+LIMIT 1;
+/*
+ visit_date |  name  
+------------+--------
+ 2020-05-24 | Agumon
+*/
+
+/* How many different animals did Stephanie Mendez see? */
+SELECT COUNT(DISTINCT animals.name) 
+FROM visits JOIN animals ON visits.animal_id=animals.id 
+JOIN vets ON visits.vet_id=vets.id WHERE vets.name='Stephanie Mendez';
+/*
+ count 
+-------
+     4
+*/
+
+/* List all vets and their specialties, including vets with no specialties */
+SELECT vets.name, species.name FROM vets 
+LEFT JOIN specializations ON vets.id = specializations.vet_id 
+LEFT JOIN species ON specializations.species_id=species.id;
+/*
+       name       |  name   
+------------------+---------
+ William Tatcher  | Pokemon
+ Stephanie Mendez | Pokemon
+ Stephanie Mendez | Digimon
+ Jack Harkness    | Digimon
+ Maisy Smith      | 
+*/
+
+/* List all animals that visited Stephanie Mendez between April 1st and August 30th, 2020 */
+SELECT visits.visit_date, animals.name FROM visits 
+JOIN animals ON visits.animal_id=animals.id 
+JOIN vets ON visits.vet_id=vets.id 
+WHERE vets.name='Stephanie Mendez' 
+AND visits.visit_date BETWEEN 'Apr 1, 2020' AND 'Aug 30, 2020';
+/*
+ visit_date |  name   
+------------+---------
+ 2020-07-22 | Agumon
+ 2020-05-24 | Blossom
+*/
+
+/* What animal has the most visits to vets? */
+SELECT animals.name, COUNT(animals.name) FROM visits 
+JOIN animals ON visits.animal_id=animals.id 
+GROUP BY animals.name 
+ORDER BY count DESC 
+LIMIT 1;
+/*
+  name   | count 
+---------+-------
+ Boarmon |     4
+*/
+
+/* Who was Maisy Smith's first visit? */
+SELECT visits.visit_date, animals.name FROM visits 
+JOIN animals ON visits.animal_id=animals.id 
+JOIN vets ON visits.vet_id=vets.id 
+WHERE vets.name='Maisy Smith' 
+ORDER BY visit_date ASC 
+LIMIT 1;
+/*
+ visit_date |  name   
+------------+---------
+ 2019-01-24 | Boarmon
+*/
+
+/* Details for most recent visit: animal information, vet information, and date of visit */
+SELECT  animals.name as animal_name, 
+        animals.escape_attempts, 
+        animals.neutered, 
+        animals.weight_kg, 
+        species.name as specie, 
+        owners.full_name as owner, 
+        owners.age as owner_age, 
+        vets.name as vet, 
+        vets.age as vet_age, 
+        vets.date_of_graduation as vet_date_of_graduation, 
+        visits.visit_date 
+FROM specializations 
+JOIN species on species_id=species.id 
+JOIN vets on vet_id=vets.id 
+LEFT JOIN animals ON species.id = animals.species_id 
+JOIN owners on animals.owner_id=owners.id 
+JOIN visits ON animals.id=visits.animal_id 
+ORDER BY visit_date DESC 
+LIMIT 1;
+/*
+ animal_name | escape_attempts | neutered | weight_kg | specie  | owner | owner_age |      vet      | vet_age | vet_date_of_graduation | visit_date 
+-------------+-----------------+----------+-----------+---------+-------+-----------+---------------+---------+------------------------+------------
+ Devimon     |               5 | t        |        11 | Digimon | Bob   |        45 | Jack Harkness |      38 | 2008-06-08             | 2021-05-04
+*/
+
+/* How many visits were with a vet that did not specialize in that animal's species? */
+SELECT COUNT(vets.name) FROM visits 
+JOIN vets ON visits.vet_id=vets.id 
+LEFT JOIN specializations ON vets.id=specializations.vet_id 
+WHERE species_id IS NULL;
+/*
+ count 
+-------
+     9
+*/
+
+/* What specialty should Maisy Smith consider getting? Look for the species she gets the most */
+SELECT species.name, COUNT(species.name) FROM visits 
+JOIN vets ON visits.vet_id=vets.id 
+JOIN animals ON visits.animal_id=animals.id 
+JOIN species ON animals.species_id=species.id 
+WHERE vets.name='Maisy Smith' 
+GROUP BY species.name 
+ORDER BY count DESC 
+LIMIT 1;
+/*
+  name   | count 
+---------+-------
+ Digimon |     6
+*/
