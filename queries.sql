@@ -546,3 +546,39 @@ LIMIT 1;
 ---------+-------
  Digimon |     6
 */
+
+/* ************************************************************************************ */
+
+/* BEFORE */
+EXPLAIN ANALYZE SELECT COUNT(*) FROM visits where animal_id = 4;
+/*
+                                                          QUERY PLAN                                                          
+
+ Aggregate  (cost=210819.35..210819.36 rows=1 width=8) (actual time=844.662..855.123 rows=1 loops=1)
+   ->  Gather  (cost=1000.00..210819.35 rows=1 width=0) (actual time=844.624..855.083 rows=0 loops=1)
+         Workers Planned: 2
+         Workers Launched: 2
+         ->  Parallel Seq Scan on visits  (cost=0.00..209819.25 rows=1 width=0) (actual time=818.149..818.149 rows=0 loops=3)
+               Filter: (animal_id = 4)
+               Rows Removed by Filter: 6589520
+ Planning Time: 0.439 ms
+ JIT:
+   Functions: 11
+   Options: Inlining false, Optimization false, Expressions true, Deforming true
+   Timing: Generation 1.313 ms, Inlining 0.000 ms, Optimization 0.766 ms, Emission 17.005 ms, Total 19.084 ms
+ Execution Time:*/ 855.454 ms 
+
+/* AFTER */
+EXPLAIN ANALYZE SELECT COUNT(*) FROM visits where animal_id = 4;
+/*
+                                                          QUERY PLAN                                                          
+
+ Aggregate  (cost=4.46..4.47 rows=1 width=8) (actual time=0.029..0.030 rows=1 loops=1)
+   ->  Index Only Scan using ordered_id on visits  (cost=0.44..4.46 rows=1 width=0) (actual time=0.025..0.025 rows=0 loops=1)
+         Index Cond: (animal_id = 4)
+         Heap Fetches: 0
+ Planning Time: 0.186 ms
+ Execution Time:*/ 0.053 ms
+
+                                                /* ******************* */
+
