@@ -549,7 +549,7 @@ LIMIT 1;
 
 /* ************************************************************************************ */
 
-/* BEFORE */
+BEFORE
 EXPLAIN ANALYZE SELECT COUNT(*) FROM visits where animal_id = 4;
 /*
                                                           QUERY PLAN                                                          
@@ -568,7 +568,7 @@ EXPLAIN ANALYZE SELECT COUNT(*) FROM visits where animal_id = 4;
    Timing: Generation 1.313 ms, Inlining 0.000 ms, Optimization 0.766 ms, Emission 17.005 ms, Total 19.084 ms
  Execution Time:*/ 855.454 ms 
 
-/* AFTER */
+AFTER
 EXPLAIN ANALYZE SELECT COUNT(*) FROM visits where animal_id = 4;
 /*
                                                           QUERY PLAN                                                          
@@ -582,3 +582,51 @@ EXPLAIN ANALYZE SELECT COUNT(*) FROM visits where animal_id = 4;
 
                                                 /* ******************* */
 
+BEFORE
+EXPLAIN ANALYZE SELECT * FROM visits where vet_id = 2;
+                                                QUERY PLAN
+ /*Seq Scan on visits  (cost=0.00..353965.00 rows=4915123 width=12) (actual time=2.976..2099.570 rows=4942144 loops=1)
+   Filter: (vet_id = 2)
+   Rows Removed by Filter: 14826416
+ Planning Time: 0.110 ms
+ JIT:
+   Functions: 2
+   Options: Inlining false, Optimization false, Expressions true, Deforming true
+   Timing: Generation 0.211 ms, Inlining 0.000 ms, Optimization 0.177 ms, Emission 2.772 ms, Total 3.160 ms
+ Execution Time:*/ 2313.511 ms
+AFTER
+
+EXPLAIN ANALYZE SELECT * FROM visits where vet_id = 2;
+                                               QUERY PLAN
+ /*Index Only Scan using vets_id_index on visits  (cost=0.44..104835.09 rows=4915123 width=12) (actual time=1.522..781.550 rows=4942144 loops=1)
+   Index Cond: (vet_id = 2)
+   Heap Fetches: 0
+ Planning Time: 0.170 ms
+ JIT:
+   Functions: 2
+   Options: Inlining false, Optimization false, Expressions true, Deforming true
+   Timing: Generation 0.174 ms, Inlining 0.000 ms, Optimization 0.129 ms, Emission 1.353 ms, Total 1.656 ms
+ Execution Time:*/ 992.796 ms
+ BEFORE
+/*EXPLAIN ANALYZE SELECT * FROM owners where email = 'owner_18327@mail.com';
+                                                        QUERY PLAN
+ Gather  (cost=1000.00..177864.70 rows=5 width=43) (actual time=313.985..1149.556 rows=5 loops=1)
+   Workers Planned: 2
+   Workers Launched: 2
+   ->  Parallel Seq Scan on owners  (cost=0.00..176864.20 rows=2 width=43) (actual time=279.797..1113.649 rows=2 loops=3)
+         Filter: ((email)::text = 'owner_18327@mail.com'::text)
+         Rows Removed by Filter: 4166667
+ Planning Time: 0.189 ms
+ JIT:
+   Functions: 6
+   Options: Inlining false, Optimization false, Expressions true, Deforming true
+   Timing: Generation 1.337 ms, Inlining 0.000 ms, Optimization 0.916 ms, Emission 14.992 ms, Total 17.245 ms
+ Execution Time:*/ 1149.839 ms
+ AFTER
+
+EXPLAIN ANALYZE SELECT * FROM owners where email = 'owner_18327@mail.com';
+                                                      QUERY PLAN
+ /*Index Scan using email_owners on owners  (cost=0.43..24.48 rows=5 width=43) (actual time=0.040..0.045 rows=5 loops=1)
+   Index Cond: ((email)::text = 'owner_18327@mail.com'::text)
+ Planning Time: 0.175 ms
+ Execution Time:*/ 0.057 ms
