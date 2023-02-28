@@ -26,9 +26,9 @@
 
 # 📖 [Vet_clinic_database] <a name="about-project"></a>
 
-> Describe your project in 1 or 2 sentences.
-
 **[Vet_clinic_database]** is the first project where we use postgres to create a simple animal data base, where we save name, date_of_birth, escape_attempts, weight_kg and neutered status.
+
+<img src='./diagram.png'>
 
 ## 🛠 Built With <a name="built-with"></a>
 
